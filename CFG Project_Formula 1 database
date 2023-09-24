@@ -1,0 +1,414 @@
+CREATE DATABASE F1;
+USE F1;
+
+
+-- Creating the 5 tables with primary keys --
+
+CREATE TABLE teams (
+team_ID INT PRIMARY KEY,
+team_name VARCHAR(55) NOT NULL,
+engine_type VARCHAR(55) NOT NULL,
+team_director VARCHAR(55) NOT NULL,
+estimated_value INT
+);
+
+CREATE TABLE drivers (
+driver_ID INT PRIMARY KEY,
+team_ID INT NOT NULL,
+driver_name VARCHAR(55) NOT NULL,
+dob DATE,
+height_cm INT,
+years_active INT,
+points INT
+);
+
+CREATE TABLE races_winners (
+race_location_id VARCHAR (5) PRIMARY KEY,
+race_location VARCHAR (55),
+team_ID INT NOT NULL,
+driver_ID INT NOT NULL,
+num_laps INT NOT NULL
+);
+
+CREATE TABLE merchandise (
+item_id INT PRIMARY KEY,
+item VARCHAR (55) NOT NULL,
+price FLOAT NOT NULL
+);
+
+CREATE TABLE online_store (
+transaction_num INT PRIMARY KEY,
+item_id INT NOT NULL,
+team_id INT NOT NULL
+);
+
+
+-- Adding Foreign keys --
+
+-- Two FKs for race_winners table --
+ALTER TABLE races_winners
+ADD CONSTRAINT FK_team_id
+FOREIGN KEY (team_ID) REFERENCES teams(team_ID);
+
+ALTER TABLE races_winners
+ADD CONSTRAINT FK_driver_id
+FOREIGN KEY (driver_ID) REFERENCES drivers(driver_ID);
+
+-- FK for the drivers table --
+
+ALTER TABLE drivers
+ADD CONSTRAINT FK_team_ids
+FOREIGN KEY (team_ID) REFERENCES teams(team_ID);
+
+-- FK for online_store table --
+
+ALTER TABLE online_store
+ADD CONSTRAINT FK_item_ids
+FOREIGN KEY (item_id) REFERENCES merchandise(item_id);
+
+ALTER TABLE online_store
+ADD CONSTRAINT FK_team_ids_transaction
+FOREIGN KEY (team_id) REFERENCES teams(team_ID);
+
+
+-- Inserting data into tables -- 
+
+INSERT INTO teams 
+(team_ID, team_name, engine_type, team_director, estimated_value)
+VALUES
+(101, 'Red Bull Racing', 'Honda', 'Christian Horner', 640000000),
+(102, 'Scuderia Ferrari S.p.A', 'Ferrari', 'Mattia Binotto', 1350000000),
+(103, 'Mercedes-AMG Petronas', 'Mercedes', 'Toto Wolff', 1000000000),
+(104, 'McLaren Racing', 'Mercedes', 'Zak Brown', 620000000),
+(105, 'BWT Alpine', 'Renault', 'Marcin Budkowski', 430000000),
+(106, 'Aston Martin Aramco Cognizant', 'Mercedes', 'Mike Krack', 475000000),
+(107, 'Alfa Romeo', 'Ferrari', 'Frederic Vasseur', 105000000),
+(108, 'Scuderia AlphaTauri', 'Honda', 'Franz Tost', 92000000),
+(109, 'Haas', 'Ferrari', 'Guenther Steiner', 56000000),
+(110, 'Williams', 'Mercedes', 'Jost Capito', 20000000);
+
+SELECT * FROM teams;
+
+ALTER TABLE teams
+RENAME COLUMN team_director TO team_principal;
+
+INSERT INTO drivers
+(driver_ID, team_ID, driver_name, dob, height_cm, years_active, points)
+VALUES
+(1, 101, 'Max Verstappen', '1997-09-30', 181, 7, 454),
+(2, 101, 'Sergio Perez', '1990-01-26', 173, 11, 305),
+(3, 102, 'Charles LeClerc', '1997-10-16', 180, 4, 308),
+(4, 102, 'Carlos Sainz', '1994-09-01', 178, 7, 246),
+(5, 103, 'Lewis Hamilton', '1985-01-07', 174, 15, 240),
+(6, 103, 'George Russell', '1998-02-15', 185, 2, 275),
+(7, 104, 'Lando Norris', '1999-11-13', 170, 3, 122),
+(8, 104, 'Daniel Ricciardo', '1989-07-01', 179, 11, 37),
+(9, 105, 'Fernando Alonso', '1981-07-29', 171, 21, 81),
+(10, 105, 'Esteban Ocon', '1996-09-17', 186, 6, 92),
+(11, 106, 'Sebastian Vettel', '1987-07-03', 175, 15, 37),
+(12, 106, 'Lance Stroll', '1998-10-29', 182, 5, 18),
+(13, 107, 'Zhou Guanyu', '1999-05-30', 175, 2, 6),
+(14, 107, 'Valtteri Bottas', '1989-08-28', 173, 9, 49),
+(15, 108, 'Pierre Gasly', '1996-02-07', 177, 5, 23),
+(16, 108, 'Yuki Tsunoda', '2000-05-11', 159, 1, 12),
+(17, 109, 'Kevin Magnussen', '1992-10-05', 174, 6, 25),
+(18, 109, 'Mick Schumacher', '1999-03-22', 176, 2, 12),
+(19, 110, 'Alex Albon', '1996-03-23', 186, 3, 4),
+(20, 110, 'Nicholas Latifi', '1995-06-29', 185, 3, 2);
+
+
+SELECT * FROM drivers;
+
+
+INSERT INTO merchandise
+(item_id, item, price)
+VALUES
+(201, 'Cap', 25.99),
+(301, 'T Shirt', 40.00),
+(401, 'Jacket', 79.99),
+(501, 'Mug', 9.25),
+(601, 'Magnet', 5.00),
+(701, 'Hoodie', 54.99),
+(801, 'Model Car', 59.99);
+
+SELECT * FROM merchandise;
+
+INSERT INTO online_store
+(transaction_num, item_id, team_id)
+VALUES
+(11111, 201, 101),
+(21111, 501, 101),
+(11112, 301, 101),
+(11113, 301, 101),
+(11114, 801, 101),
+(21114, 501, 101),
+(11115, 701, 101),
+(11116, 601, 101),
+(21116, 601, 102),
+(31116, 601, 103),
+(11117, 401, 101),
+(21117, 701, 101),
+(11118, 201, 102),
+(21118, 301, 102),
+(11119, 601, 102),
+(21119, 801, 102),
+(11120, 301, 102),
+(11121, 201, 102),
+(11122, 701, 102),
+(11123, 401, 102),
+(21123, 501, 102),
+(11124, 201, 103),
+(11125, 201, 103),
+(11126, 501, 103),
+(11127, 301, 103),
+(11128, 401, 103),
+(11129, 801, 103),
+(11130, 201, 103),
+(11131, 601, 103),
+(11132, 401, 103),
+(11133, 301, 103),
+(11134, 801, 103),
+(11135, 301, 103),
+(11136, 201, 104),
+(11137, 201, 104),
+(11138, 601, 104),
+(11139, 801, 104),
+(11140, 401, 104),
+(11141, 401, 104),
+(11142, 501, 104),
+(11143, 401, 104),
+(11144, 201, 104),
+(11145, 301, 104),
+(11146, 301, 104),
+(11147, 501, 105),
+(11148, 301, 105),
+(11149, 401, 105),
+(11150, 301, 105),
+(11151, 301, 105),
+(11152, 201, 105),
+(11153, 801, 105),
+(11154, 701, 105),
+(11155, 301, 106),
+(11156, 301, 106),
+(11157, 701, 106),
+(11158, 401, 106),
+(11159, 601, 106),
+(11160, 201, 106),
+(11161, 501, 106),
+(11162, 201, 106),
+(11163, 201, 107),
+(11164, 201, 107),
+(11165, 301, 107),
+(11166, 401, 107),
+(11167, 701, 107),
+(11168, 701, 107),
+(11169, 301, 107),
+(11170, 401, 107),
+(11171, 401, 107),
+(11172, 301, 108),
+(11173, 201, 108),
+(11174, 601, 108),
+(11175, 701, 108),
+(11176, 201, 108),
+(11177, 201, 108),
+(11178, 401, 108),
+(11179, 501, 108),
+(11180, 401, 108),
+(11181, 201, 109),
+(11182, 201, 109),
+(11183, 401, 109),
+(11184, 601, 109),
+(11185, 401, 109),
+(11186, 501, 109),
+(11187, 801, 109),
+(11188, 201, 109),
+(11189, 201, 109),
+(11190, 401, 109),
+(11191, 401, 110),
+(11192, 401, 110),
+(11193, 801, 110),
+(11194, 501, 110),
+(11195, 201, 110),
+(11196, 201, 110),
+(11197, 301, 110),
+(11198, 201, 110),
+(11199, 601, 110);
+
+
+SELECT * FROM online_store;
+
+INSERT INTO races_winners
+(race_location_id, race_location, team_ID, driver_ID, num_laps)
+VALUES
+('R1','Bahrain', 102, 3, 57),
+('R2','SaudiArabia', 101, 1, 50),
+('R3','Australia', 102, 3, 58),
+('R4','Italy Emilia', 101, 1, 59),
+('R5','USA Miami', 101, 1, 57),
+('R6','Spain', 101, 1, 66),
+('R7', 'Monaco', 101, 2, 78),
+('R8', 'Azerbaijan', 101, 1, 51),
+('R9', 'Canada', 101, 1, 70),
+('R10', 'Great Britain', 102, 4, 52),
+('R11', 'Austria', 102, 3, 71),
+('R12', 'France', 101, 1, 53),
+('R13', 'Hungary', 101, 1, 70),
+('R14', 'Belgium', 101, 1, 44),
+('R15', 'Netherland', 101, 1, 72),
+('R16', 'Italy Monza', 101, 1,53);
+
+
+SELECT * FROM races_winners;
+
+
+-- Stored Procedure --
+-- I want to easily insert into race winners table --
+
+DELIMITER //
+CREATE PROCEDURE InsertRacesWinners
+(IN in_race_location_id VARCHAR (5),
+IN in_race_location VARCHAR (55),
+IN in_team_ID INT,
+IN in_driver_ID INT,
+IN in_num_laps INT)
+BEGIN
+INSERT INTO races_winners (race_location_id, race_location, team_ID, driver_ID, num_laps)
+VALUES
+(in_race_location_id, in_race_location, in_team_ID, in_driver_ID, in_num_laps);
+END //
+DELIMITER ;
+
+CALL InsertRacesWinners ('R17', 'Singapore', 101, 2, 61);
+CALL InsertRacesWinners ('R18', 'Japan', 101, 1, 53);
+CALL InsertRacesWinners ('R19', 'USA Texas', 101, 1, 56);
+CALL InsertRacesWinners ('R20', 'Mexico', 101, 1, 71);
+CALL InsertRacesWinners ('R21', 'Brazil', 103, 6, 71);
+CALL InsertRacesWinners ('R22','Abu Dhabi', 101, 1, 55);
+
+
+SELECT * FROM races_winners;
+
+-- Creating views with the join function --
+
+-- Creating a view to analyse number of driver wins, what engines were used and value of the team by joining multiple tables,  --
+
+CREATE VIEW driver_wins AS
+SELECT dr.team_ID, dr.driver_name, dr.points, races_winners.race_location, teams.team_name, teams.engine_type, teams.estimated_value
+FROM drivers dr
+INNER JOIN races_winners ON dr.driver_ID = races_winners.driver_ID
+INNER JOIN teams ON dr.team_ID = teams.team_ID
+ORDER BY dr.points;
+
+SELECT team_ID, driver_name, points, race_location, team_name, engine_type, estimated_value FROM driver_wins;
+
+SELECT engine_type, COUNT(engine_type)
+FROM driver_wins
+GROUP BY engine_type;
+-- Honda engines were the most common in race winning cars, followed by Ferrari --
+
+CREATE VIEW driver_wins_2 AS
+SELECT driver_name, ROUND(AVG(points),0) AS points, COUNT(race_location) AS num_races_won, engine_type, ROUND(AVG(estimated_value),0) AS estimated_value
+FROM driver_wins
+GROUP BY driver_name, engine_type
+ORDER BY num_races_won DESC;
+
+SELECT driver_name, points, num_races_won, engine_type, estimated_value FROM driver_wins_2;
+-- We can see which driver had the most wins in the 2022 season --
+
+-- Views for purchases and whether more team points is linked with more sales --
+
+CREATE VIEW purchases AS
+SELECT os.transaction_num, os.team_id, merchandise.item, merchandise.price
+FROM online_store os
+LEFT JOIN merchandise ON os.item_id = merchandise.item_id;
+
+SELECT transaction_num, team_id, item, price FROM purchases;
+
+CREATE VIEW purchase_1 AS
+SELECT team_id, SUM(price) AS sales
+FROM purchases
+GROUP BY team_id;
+
+SELECT team_id, sales FROM purchase_1;
+
+CREATE VIEW team_stats AS
+SELECT team_ID, SUM(years_active) AS years_active, SUM(points) AS points
+FROM drivers
+GROUP BY team_ID;
+
+SELECT team_ID, years_active, points FROM team_stats;
+
+CREATE VIEW team_sales_stats AS
+SELECT purchase_1.team_id, purchase_1.sales, team_stats.points, teams.team_name
+FROM purchase_1
+LEFT JOIN team_stats ON purchase_1.team_id = team_stats.team_ID
+LEFT JOIN teams ON purchase_1.team_id = teams.team_ID
+ORDER BY sales DESC;
+
+SELECT team_id, sales, points, team_name FROM team_sales_stats;
+
+
+-- Creating a stored function --
+-- lets say the monetary values in all tables are in US$ and we want to convert to GBP --
+-- Exchange rate at time of query 1USD = 0.82GBP
+
+DELIMITER //
+CREATE FUNCTION convert_to_GBP (price_original float)
+RETURNS INT
+deterministic
+BEGIN
+DECLARE price_after int;
+SET price_after = price_original * 0.82;
+RETURN (price_after);
+END //
+DELIMITER ;
+
+-- apply to query --
+
+SELECT team_name, convert_to_GBP (sales) AS gbp, sales AS usd
+FROM team_sales_stats
+ORDER BY sales;
+
+SELECT team_ID, team_name, convert_to_GBP(estimated_value) AS gbp, estimated_value AS usd
+FROM teams;
+
+-- Subquery -- 
+-- Find all the clothing orders --
+SELECT transaction_num, team_id, item_id
+FROM online_store
+WHERE item_id IN (SELECT item_id FROM merchandise WHERE item IN ('Cap', 'T Shirt', 'Jacket', 'Hoodie'));
+
+-- Find out which races were won by a driver with more than 5 years active in F1 --
+SELECT race_location
+FROM races_winners
+WHERE driver_ID IN (SELECT driver_ID FROM drivers WHERE years_active >= 5);
+
+
+
+-- Trigger -- 
+-- When invalid item is inserted, trigger error message 'Invalid item ID' --
+
+DELIMITER //
+CREATE TRIGGER order_before_insert
+BEFORE INSERT on online_store
+FOR EACH ROW
+IF NEW.item_id < 201 OR NEW.item_id > 801 THEN
+SIGNAL SQLSTATE '50001' SET MESSAGE_TEXT = 'Invalid item ID';
+END IF; //
+DELIMITER ;
+
+INSERT INTO online_store
+(transaction_num, item_id, team_id)
+VALUES
+(11201, 901, 101),
+(11202, 101, 102);
+-- expect and error -- 
+
+-- Group by and Having query --
+SELECT team_ID, SUM(points) AS points
+FROM drivers
+GROUP BY team_ID
+HAVING (points > 300);
+
+
+
